@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mode Matrix</title>
+
+<style>
+html,body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    font-family:Consolas,monospace;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:0;
+}
+
+#panel{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:80%;
+    max-width:900px;
+
+    background:rgba(0,0,0,0.85);
+    border:2px solid #00ff00;
+    padding:20px;
+
+    color:#00ff00;
+    z-index:1;
+}
+
+#terminal{
+    height:300px;
+    overflow:hidden;
+    white-space:pre-wrap;
+    font-size:18px;
+}
+
+.progress{
+
+    width:100%;
+    height:22px;
+    border:1px solid #00ff00;
+    margin-top:20px;
+}
+
+.bar{
+
+    width:0%;
+    height:100%;
+    background:#00ff00;
+    transition:width .3s;
+}
+
+h1{
+text-align:center;
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="panel">
+
+<h1>INITIALISATION...</h1>
+
+<div id="terminal"></div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+</div>
+
+<script>
+
+/////////////////////////
+// MATRIX
+/////////////////////////
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const letters="010101001101010111001010101010101001010101";
+
+const size=18;
+
+const columns=Math.floor(canvas.width/size);
+
+const drops=[];
+
+for(let i=0;i<columns;i++) drops[i]=1;
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.08)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#00ff00";
+ctx.font=size+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+let text=letters[Math.floor(Math.random()*letters.length)];
+
+ctx.fillText(text,i*size,drops[i]*size);
+
+if(drops[i]*size>canvas.height && Math.random()>0.97){
+
+drops[i]=0;
+
+}
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,35);
+
+/////////////////////////
+// TERMINAL
+/////////////////////////
+
+const terminal=document.getElementById("terminal");
+
+const lines=[
+
+"> connexion...",
+"> ouverture du terminal...",
+"> analyse du système...",
+"> recherche des fichiers secrets...",
+"> lecture des memes...",
+"> téléchargement de pizza.exe...",
+"> récupération des cookies...",
+"> activation du mode turbo...",
+"> synchronisation...",
+"> compilation...",
+"> traitement terminé..."
+
+];
+
+let i=0;
+
+const bar=document.getElementById("bar");
+
+function beep(){
+
+const audio=new AudioContext();
+
+const osc=audio.createOscillator();
+
+const gain=audio.createGain();
+
+osc.type="square";
+
+osc.frequency.value=700;
+
+osc.connect(gain);
+
+gain.connect(audio.destination);
+
+gain.gain.value=0.03;
+
+osc.start();
+
+osc.stop(audio.currentTime+0.05);
+
+}
+
+function next(){
+
+if(i<lines.length){
+
+terminal.innerHTML+=lines[i]+"<br>";
+
+terminal.scrollTop=terminal.scrollHeight;
+
+bar.style.width=((i+1)/lines.length*100)+"%";
+
+beep();
+
+i++;
+
+setTimeout(next,700);
+
+}else{
+
+setTimeout(()=>{
+
+terminal.innerHTML+="<br><br>";
+terminal.innerHTML+="==============================<br>";
+terminal.innerHTML+="AUCUN PIRATAGE DÉTECTÉ 😄<br>";
+terminal.innerHTML+="C'ÉTAIT UNE BLAGUE !<br>";
+terminal.innerHTML+="==============================";
+
+},1000);
+
+}
+
+}
+
+next();
+
+</script>
+
+</body>
+</html>
